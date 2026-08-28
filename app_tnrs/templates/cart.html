@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}My Cart{% endblock %}
+
+{% block content %}
+<div class="app-page">
+  <div class="page-header">
+    <h1>Shopping Cart</h1>
+  </div>
+  
+  {% if cart_items %}
+    <div class="app-grid" id="cart-items-container">
+      {% for item in cart_items %}
+        {% with item_id=item.id item_name=item.name item_desc=item.description item_price=item.price %}
+        <div class="app-card" id="cart-item-{{ item_id }}" data-item-id="{{ item_id }}" data-item-index="{{ forloop.counter0 }}">
+          <div class="card-image-placeholder"></div>
+          <div class="card-content">
+            <h3 class="card-title">{{ item_name }}</h3>
+            <p class="card-description">{{ item_desc }}</p>
+            <div class="card-price">₹{{ item_price }} </div>
+            <form action="{% url 'remove_from_cart' forloop.counter0 %}" method="post" class="remove-from-cart-form">
+              {% csrf_token %}
+              <button type="submit" class="app-remove-btn" id="btn-remove-cart-{{ forloop.counter0 }}" data-item-index="{{ forloop.counter0 }}">Remove</button>
+            <a href="{% url 'buy_product' item_id %}" class="app-buy-btn" id="btn-buy-cart-{{ forloop.counter0 }}" data-item-index="{{ forloop.counter0 }}">Buy Now</a>
+            
+            </form>
+
+          </div>
+        </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+    <div class="cart-actions">
+      <a href="{% url 'home' %}" class="app-action-btn">← Continue Shopping</a>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <h2>Your cart is empty</h2>
+      <p>Explore our resources and add items to get started.</p>
+      <a href="{% url 'home' %}" class="app-action-btn">Browse Resources</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

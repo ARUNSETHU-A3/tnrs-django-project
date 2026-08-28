@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="app-auth-container">
+  <div class="app-logo"></div>
+  <div class="app-auth-card">
+    <h1>LOGIN</h1>
+    <form method="POST" id="login-form" class="app-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" name="username" id="id_username" placeholder="Email or Username" class="app-input" required>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" id="id_password" placeholder="Password" class="app-input" required>
+      </div>
+      {% if form.non_field_errors %}
+        <div class="app-error">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <button type="submit" class="app-button" id="login-submit">LOG IN</button>
+    </form>
+    <div class="app-auth-footer">
+      <p>New to TNRS? <a href="{% url 'signup' %}" class="app-link">Sign up now</a></p>
+      <p class="app-help">This page is protected by reCAPTCHA and the Google<br><a href="#" class="app-link-small">Privacy Policy</a> and <a href="#" class="app-link-small">Terms of Service</a> apply.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

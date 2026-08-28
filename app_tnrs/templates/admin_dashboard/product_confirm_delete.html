@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Delete Product{% endblock %}
+{% block content %}
+<h1>Delete Product</h1>
+<div class="app-page">
+    <div class="app-card">
+        <div class="card-content">
+            <p>Are you sure you want to delete "{{ product.name }}"?</p>
+            <form method="post" style="margin-top:12px">{% csrf_token %}
+                <button class="app-button" type="submit">Yes, delete</button>
+                <a class="app-button" href="{% url 'admin_dashboard' %}">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

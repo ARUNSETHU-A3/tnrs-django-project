@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %} The Neighbour Resource Sharing{% endblock %}
+
+{% block content %}
+<div class="app-page">
+  <div class="page-header">
+    <h1>Available Resources</h1>
+    <p class="subtitle">Browse and add items to your cart</p>
+  </div>
+  
+  {% if products %}
+    <div class="app-grid" id="products-container">
+      {% for product in products %}
+        <div class="app-card" id="product-{{ product.id }}" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}" data-image-url="{% if product.image %}{{ product.image.url }}{% endif %}">
+          {% if product.image %}
+            <div class="card-image">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" style=" width: 100%; height: 150px; object-fit: cover;">
+            </div>
+          {% else %}
+            <div class="card-image-placeholder"></div>
+          {% endif %}
+          <div class="card-content">
+            <h3 class="card-title"></strong>{{ product.name }}</h3>
+            {% if product.owner_name %}
+              <p class="card-owner"><strong>Owner:</strong> {{ product.owner_name }}</p>
+            {% endif %}
+            <p class="card-description">{{ product.description }}</p>
+            <div class="card-price">₹{{ product.price }}</div>
+            <form action="{% url 'add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+              {% csrf_token %}
+              <button type="submit" class="app-add-btn" id="btn-add-cart-{{ product.id }}" data-product-id="{{ product.id }}">+ Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>No resources available at the moment.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

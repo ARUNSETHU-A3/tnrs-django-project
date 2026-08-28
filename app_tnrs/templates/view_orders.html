@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders - TNRS{% endblock %}
+
+{% block content %}
+<div class="app-page">
+  <div class="page-header">
+    <h1>My Orders</h1>
+    <p class="subtitle">View your order history and details</p>
+  </div>
+  
+  {% if orders %}
+    <div class="orders-container">
+      {% for order in orders %}
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-id">Order #{{ order.id }}</div>
+            <div class="order-date">{{ order.ordered_at|date:"d M, Y H:i" }}</div>
+            <span class="status-badge {% if order.status == 'Confirmed' %}status-confirmed{% elif order.status == 'Pending' %}status-pending{% else %}status-completed{% endif %}">{{ order.status }}</span>
+          </div>
+
+          <div class="order-body">
+            <div class="product-section">
+              <h3>Product Ordered</h3>
+              <div class="product-item">
+                <div class="product-info">
+                  <p class="product-name">{{ order.product.name }}</p>
+                  <p class="product-price">₹{{ order.product.price }}</p>
+                  <p class="product-desc">{{ order.product.description }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="customer-section">
+              <h3>Delivery Details</h3>
+              <div class="details-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Name:</span>
+                  <span class="detail-value">{{ order.name }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Mobile:</span>
+                  <span class="detail-value">{{ order.mobile }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Address:</span>
+                  <span class="detail-value">{{ order.address }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-actions">
+            <a href="{% url 'cancel_order' order.id %}" class="cancel-order-btn" onclick="return confirm('Are you sure you want to cancel this order? It cannot be undone.');">Cancel Order</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <h2>No Orders Yet</h2>
+      <p>You haven't placed any orders. Start shopping to make your first order!</p>
+      <a href="{% url 'home' %}" class="app-action-btn">Browse Resources</a>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .orders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .order-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .order-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .order-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .order-id {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .order-date {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+  }
+
+  .status-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-confirmed {
+    background: rgba(40, 167, 69, 0.3);
+    color: #28a745;
+  }
+
+  .status-pending {
+    background: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+  }
+
+  .status-completed {
+    background: rgba(0, 150, 200, 0.3);
+    color: #00c8ff;
+  }
+
+  .order-body {
+    padding: 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .product-section h3,
+  .customer-section h3 {
+    color: #fff;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .product-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #28a745;
+  }
+
+  .product-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 8px 0;
+  }
+
+  .product-price {
+    color: #28a745;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 0 8px 0;
+  }
+
+  .product-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .detail-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .detail-value {
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .order-actions {
+    padding: 0 25px 20px 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+  }
+
+  .cancel-order-btn {
+    padding: 10px 20px;
+    background: rgba(220, 53, 69, 0.3);
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    color: #ff6b6b;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: inline-block;
+  }
+
+  .cancel-order-btn:hover {
+    background: rgba(220, 53, 69, 0.5);
+    color: #ff8888;
+  }
+
+  @media (max-width: 768px) {
+    .order-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .order-body {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 15px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% endblock %}
