@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-+#vcw%0ra=v#olsh=(o_-323cut7(ieq*6582br$@6e1g=wk46
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # For local development and testing the admin dashboard, enable DEBUG.
-DEBUG = True
+DEBUG =False
 
 ALLOWED_HOSTS = ["*"]
 
